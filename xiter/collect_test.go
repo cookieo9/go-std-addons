@@ -3,6 +3,7 @@ package xiter
 import (
 	"iter"
 	"reflect"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,7 +11,7 @@ import (
 
 func collectTestCase[T, Accum any](name string, source []T, start Accum, f func(Accum, T) Accum, want Accum) GenericTestCase {
 	testCase := SimpleTest(name, func(t *testing.T) Accum {
-		return Collect(sliceValues(source), start, f)
+		return Collect(slices.Values(source), start, f)
 	})
 	if rv := reflect.ValueOf(want); rv.Kind() == reflect.Slice && rv.Len() == 0 {
 		return testCase.Value(assert.Empty).Args("empty result")

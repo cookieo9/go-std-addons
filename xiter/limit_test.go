@@ -2,13 +2,14 @@ package xiter
 
 import (
 	"iter"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func limitTestCase[T any](name string, src []T, n int, want []T) *SimpleTestCase[[]T] {
-	return SliceCollectTest(name, Limit(sliceValues(src), n), want)
+	return SliceCollectTest(name, Limit(slices.Values(src), n), want)
 }
 
 func TestLimit(t *testing.T) {
@@ -33,11 +34,11 @@ func TestLimit(t *testing.T) {
 }
 
 func whileTestCase[T any](name string, src []T, f func(T) bool, want []T) *SimpleTestCase[[]T] {
-	return SliceCollectTest(name, While(sliceValues(src), f), want)
+	return SliceCollectTest(name, While(slices.Values(src), f), want)
 }
 
 func untilTestCase[T any](name string, src []T, f func(T) bool, want []T) *SimpleTestCase[[]T] {
-	return SliceCollectTest(name, Until(sliceValues(src), f), want)
+	return SliceCollectTest(name, Until(slices.Values(src), f), want)
 }
 
 func TestWhileUntil(t *testing.T) {
@@ -72,7 +73,7 @@ type flResult[T any] struct {
 
 func makeFirstTest[T any](name string, src []T, want T, ok bool) *SimpleTestCase[flResult[T]] {
 	tc := SimpleTest(name, func(t *testing.T) flResult[T] {
-		v, ok := First(sliceValues(src))
+		v, ok := First(slices.Values(src))
 		return flResult[T]{v, ok}
 	})
 	return tc.Compare(flResult[T]{want, ok}, assert.Equal).Args("match result")
@@ -80,7 +81,7 @@ func makeFirstTest[T any](name string, src []T, want T, ok bool) *SimpleTestCase
 
 func makeLastTest[T any](name string, src []T, want T, ok bool) *SimpleTestCase[flResult[T]] {
 	tc := SimpleTest(name, func(t *testing.T) flResult[T] {
-		v, ok := Last(sliceValues(src))
+		v, ok := Last(slices.Values(src))
 		return flResult[T]{v, ok}
 	})
 	return tc.Compare(flResult[T]{want, ok}, assert.Equal).Args("match result")

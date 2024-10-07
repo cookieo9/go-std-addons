@@ -8,14 +8,14 @@ import (
 )
 
 func TestMaterializeCount(t *testing.T) {
-	source := sliceValues([]int{1, 2, 3})
+	source := slices.Values([]int{1, 2, 3})
 	source, n := CountUses(source)
 	m := Materialize(source)
 	assert.Equal(t, 0, *n, "source iterator not yet iterated")
-	sliceCollect(m)
+	slices.Collect(m)
 	assert.Equal(t, 1, *n, "materialized iterator causes source to be iterated")
 	for i := 0; i < 50; i++ {
-		sliceCollect(m)
+		slices.Collect(m)
 		assert.Equal(t, 1, *n, "materialized iterator prevents further iteration of source")
 	}
 }
@@ -35,10 +35,10 @@ func TestMaterializeOnce(t *testing.T) {
 	}
 	m := Materialize(source)
 	for i := 0; i < 50; i++ {
-		got := sliceCollect(m)
+		got := slices.Collect(m)
 		assert.Equal(t, want, got, "same sequence")
 	}
-	gotEmpty := sliceCollect(source)
+	gotEmpty := slices.Collect(source)
 	assert.Empty(t, gotEmpty, "source iterator is exhausted")
 }
 
@@ -48,16 +48,16 @@ func TestMaterializePanic(t *testing.T) {
 
 func TestMaterializeShort(t *testing.T) {
 	values := []int{1, 2, 3}
-	m := Materialize(sliceValues(values))
+	m := Materialize(slices.Values(values))
 	mLimited := Limit(m, 1)
 
 	for i := 0; i < 10; i++ {
 		wantLimited := []int{1}
-		got := sliceCollect(mLimited)
+		got := slices.Collect(mLimited)
 		assert.Equal(t, wantLimited, got, "got limited sequence")
 
 		wantFull := slices.Clone(values)
-		got = sliceCollect(m)
+		got = slices.Collect(m)
 		assert.Equal(t, wantFull, got, "got full original sequence")
 	}
 }

@@ -2,6 +2,7 @@ package xiter
 
 import (
 	"iter"
+	"slices"
 	"sync"
 )
 
@@ -17,9 +18,9 @@ import (
 // Warning: Do not use Materialize on an indefinite iterator, as the cache will
 // grow indefinitely and consume all available memory.
 func Materialize[T any](it iter.Seq[T]) iter.Seq[T] {
-	values := sync.OnceValue(func() []T { return sliceCollect(it) })
+	values := sync.OnceValue(func() []T { return slices.Collect(it) })
 
 	return func(yield func(T) bool) {
-		sliceValues(values())(yield)
+		slices.Values(values())(yield)
 	}
 }
