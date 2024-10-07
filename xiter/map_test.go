@@ -2,11 +2,12 @@ package xiter
 
 import (
 	"iter"
+	"slices"
 	"testing"
 )
 
 func mapTestCase[In, Out any](name string, source []In, want []Out, f func(In) Out) *SimpleTestCase[[]Out] {
-	return SliceCollectTest(name, Map(sliceValues(source), f), want)
+	return SliceCollectTest(name, Map(slices.Values(source), f), want)
 }
 
 func TestMap(t *testing.T) {

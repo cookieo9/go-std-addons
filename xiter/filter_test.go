@@ -2,15 +2,16 @@ package xiter
 
 import (
 	"iter"
+	"slices"
 	"testing"
 )
 
 func filterTestCase[T any](name string, source []T, want []T, f func(T) bool) GenericTestCase {
-	return SliceCollectTest(name, Filter(sliceValues(source), f), want)
+	return SliceCollectTest(name, Filter(slices.Values(source), f), want)
 }
 
 func excludeTestCase[T any](name string, source []T, want []T, f func(T) bool) GenericTestCase {
-	return SliceCollectTest(name, Exclude(sliceValues(source), f), want)
+	return SliceCollectTest(name, Exclude(slices.Values(source), f), want)
 }
 
 func TestFilterExclude(t *testing.T) {

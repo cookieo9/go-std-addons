@@ -2,6 +2,7 @@ package xiter
 
 import (
 	"iter"
+	"slices"
 	"testing"
 )
 
@@ -11,7 +12,7 @@ func TestOne(t *testing.T) {
 		SliceCollectTest("One(`five`)", One("five"), []string{"five"}),
 
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return One(42)
 		}),
 	}.Run(t)
@@ -24,7 +25,7 @@ func TestRepeat(t *testing.T) {
 		SliceCollectTest("Repeat(1,2)", Repeat(1, 2), []int{1, 1}),
 
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return Repeat(42, 1)
 		}),
 	}.Run(t)
@@ -35,7 +36,7 @@ func TestForever(t *testing.T) {
 		SliceCollectTest("Limit(Forever(5.5),3)", Limit(Forever(5.5), 3), []float64{5.5, 5.5, 5.5}),
 
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return Limit(Forever(12), 42)
 		}),
 	}.Run(t)

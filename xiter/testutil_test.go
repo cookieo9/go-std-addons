@@ -2,6 +2,7 @@ package xiter
 
 import (
 	"iter"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -126,7 +127,7 @@ func CountUses[T any](it iter.Seq[T]) (iter.Seq[T], *int) {
 
 func SliceCollectTest[T any](name string, it iter.Seq[T], want []T) *SimpleTestCase[[]T] {
 	tc := SimpleTest(name, func(t *testing.T) []T {
-		return sliceCollect(it)
+		return slices.Collect(it)
 	})
 	if len(want) == 0 {
 		return tc.Value(assert.Empty).Args("match empty slice")
@@ -139,13 +140,13 @@ func PanicTestCases[T any](f func(iter.Seq[T]) iter.Seq[T]) GenericTestCases {
 		SimpleTest("nilIterPanic", func(t *testing.T) bool {
 			var it iter.Seq[T]
 			out := f(it)
-			sliceCollect(out)
+			slices.Collect(out)
 			return true
 		}).Panics().Args("panics as expected"),
 		SimpleTest("iterPanic", func(t *testing.T) bool {
 			it := func(func(T) bool) { panic("no values") }
 			out := f(it)
-			sliceCollect(out)
+			slices.Collect(out)
 			return true
 		}).PanicsWith("no values").Args("panics as expected"),
 	}

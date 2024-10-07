@@ -2,6 +2,7 @@ package xiter
 
 import (
 	"iter"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,25 +11,25 @@ import (
 func TestCountOverflowUnderflow(t *testing.T) {
 	t.Run("OverflowUint8", func(t *testing.T) {
 		iter := Limit(Count(uint8(250)), 10)
-		s := sliceCollect(iter)
+		s := slices.Collect(iter)
 		assert.Equal(t, []uint8{250, 251, 252, 253, 254, 255, 0, 1, 2, 3}, s)
 	})
 
 	t.Run("OverflowInt8", func(t *testing.T) {
 		iter := Limit(Count(int8(120)), 10)
-		s := sliceCollect(iter)
+		s := slices.Collect(iter)
 		assert.Equal(t, []int8{120, 121, 122, 123, 124, 125, 126, 127, -128, -127}, s)
 	})
 
 	t.Run("UnderflowUint8", func(t *testing.T) {
 		iter := Limit(CountDown(uint8(1), 1), 10)
-		s := sliceCollect(iter)
+		s := slices.Collect(iter)
 		assert.Equal(t, []uint8{1, 0, 255, 254, 253, 252, 251, 250, 249, 248}, s)
 	})
 
 	t.Run("UnderflowInt8", func(t *testing.T) {
 		iter := Limit(CountDown(int8(-125), 1), 10)
-		s := sliceCollect(iter)
+		s := slices.Collect(iter)
 		assert.Equal(t, []int8{-125, -126, -127, -128, 127, 126, 125, 124, 123, 122}, s)
 	})
 }
@@ -58,33 +59,33 @@ func TestRanges(t *testing.T) {
 func TestCountPanics(t *testing.T) {
 	t.Run("Count", func(t *testing.T) {
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return Limit(Count(0), 10)
 		}).Run(t)
 	})
 	t.Run("CountUp", func(t *testing.T) {
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return Limit(CountUp(0, 1), 10)
 		}).Run(t)
 	})
 	t.Run("CountDown", func(t *testing.T) {
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return Limit(CountDown(0, 1), 10)
 		}).Run(t)
 	})
 
 	t.Run("Range", func(t *testing.T) {
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return Range(0, 10)
 		}).Run(t)
 	})
 
 	t.Run("RangeBy", func(t *testing.T) {
 		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
-			sliceCollect(it)
+			slices.Collect(it)
 			return RangeBy(0, 10, 1)
 		}).Run(t)
 	})
