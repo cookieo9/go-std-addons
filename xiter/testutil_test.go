@@ -1,6 +1,7 @@
 package xiter
 
 import (
+	"iter"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -115,15 +116,15 @@ func (s *SimpleTestCase[T]) Compare(to T, caf assert.ComparisonAssertionFunc) *S
 	})
 }
 
-func CountUses(iter func(func(int) bool)) (func(func(int) bool), *int) {
+func CountUses(it iter.Seq[int]) (iter.Seq[int], *int) {
 	n := 0
 	return func(yield func(int) bool) {
 		n++
-		iter(yield)
+		it(yield)
 	}, &n
 }
 
-func IteratorCollectTest[T any](name string, it func(func(T) bool), want []T) *SimpleTestCase[[]T] {
+func IteratorCollectTest[T any](name string, it iter.Seq[T], want []T) *SimpleTestCase[[]T] {
 	tc := SimpleTest(name, func(t *testing.T) []T {
 		return sliceCollect(it)
 	})
@@ -133,10 +134,10 @@ func IteratorCollectTest[T any](name string, it func(func(T) bool), want []T) *S
 	return tc.Compare(want, assert.EqualValues).Args("match slice")
 }
 
-func PanicTestCases[T any](f func(func(func(T) bool)) func(func(T) bool)) GenericTestCases {
+func PanicTestCases[T any](f func(iter.Seq[T]) iter.Seq[T]) GenericTestCases {
 	return GenericTestCases{
 		SimpleTest("nilIterPanic", func(t *testing.T) bool {
-			var it func(func(T) bool)
+			var it iter.Seq[T]
 			out := f(it)
 			sliceCollect(out)
 			return true

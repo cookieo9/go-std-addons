@@ -1,6 +1,9 @@
 package xiter
 
-import "sync"
+import (
+	"iter"
+	"sync"
+)
 
 // Materialize returns an iterator that yield the same values as the original
 // iterator, using a cached copy of the data from the original iterator. The
@@ -13,7 +16,7 @@ import "sync"
 //
 // Warning: Do not use Materialize on an indefinite iterator, as the cache will
 // grow indefinitely and consume all available memory.
-func Materialize[T any](it func(func(T) bool)) func(func(T) bool) {
+func Materialize[T any](it iter.Seq[T]) iter.Seq[T] {
 	values := sync.OnceValue(func() []T { return sliceCollect(it) })
 
 	return func(yield func(T) bool) {

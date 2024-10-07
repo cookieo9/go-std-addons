@@ -1,6 +1,7 @@
 package xiter
 
 import (
+	"iter"
 	"reflect"
 	"testing"
 
@@ -36,7 +37,7 @@ func TestCollect(t *testing.T) {
 		collectTestCase("someCollect", []int{1, 2, 3}, []int{}, collectAccum, []int{1, 2, 3}),
 		collectTestCase("someCollectStart10", []int{1, 2, 3}, []int{10}, collectAccum, []int{10, 1, 2, 3}),
 
-		PanicTestCases(func(f func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(f iter.Seq[int]) iter.Seq[int] {
 			Collect(f, 0, sumAccum)
 			return f
 		}),

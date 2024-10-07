@@ -1,6 +1,7 @@
 package xiter
 
 import (
+	"iter"
 	"testing"
 )
 
@@ -27,7 +28,7 @@ func TestFilterExclude(t *testing.T) {
 			filterTestCase("isEvenEmpty", []int{}, []int{}, isEven),
 			filterTestCase("isEvenNil", nil, nil, isEven),
 
-			PanicTestCases(func(s func(func(int) bool)) func(func(int) bool) {
+			PanicTestCases(func(s iter.Seq[int]) iter.Seq[int] {
 				return Filter(s, func(i int) bool { return true })
 			}),
 		}.Run(t)
@@ -43,7 +44,7 @@ func TestFilterExclude(t *testing.T) {
 			excludeTestCase("isEvenEmpty", []int{}, []int{}, isEven),
 			excludeTestCase("isEvenNil", nil, nil, isEven),
 
-			PanicTestCases(func(s func(func(int) bool)) func(func(int) bool) {
+			PanicTestCases(func(s iter.Seq[int]) iter.Seq[int] {
 				return Exclude(s, func(i int) bool { return false })
 			}),
 		}.Run(t)
