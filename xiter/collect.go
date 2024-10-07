@@ -8,9 +8,8 @@ import "iter"
 // Using an iterator with no elements will return the initial accumulator value.
 func Collect[T, Accum any](it iter.Seq[T], start Accum, f func(Accum, T) Accum) Accum {
 	out := start
-	it(func(t T) bool {
+	for t := range it {
 		out = f(out, t)
-		return true
-	})
+	}
 	return out
 }

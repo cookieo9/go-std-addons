@@ -14,7 +14,7 @@ func TestMaterializeCount(t *testing.T) {
 	assert.Equal(t, 0, *n, "source iterator not yet iterated")
 	slices.Collect(m)
 	assert.Equal(t, 1, *n, "materialized iterator causes source to be iterated")
-	for i := 0; i < 50; i++ {
+	for range 50 {
 		slices.Collect(m)
 		assert.Equal(t, 1, *n, "materialized iterator prevents further iteration of source")
 	}
@@ -34,7 +34,7 @@ func TestMaterializeOnce(t *testing.T) {
 		}
 	}
 	m := Materialize(source)
-	for i := 0; i < 50; i++ {
+	for range 50 {
 		got := slices.Collect(m)
 		assert.Equal(t, want, got, "same sequence")
 	}
@@ -51,7 +51,7 @@ func TestMaterializeShort(t *testing.T) {
 	m := Materialize(slices.Values(values))
 	mLimited := Limit(m, 1)
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		wantLimited := []int{1}
 		got := slices.Collect(mLimited)
 		assert.Equal(t, wantLimited, got, "got limited sequence")
