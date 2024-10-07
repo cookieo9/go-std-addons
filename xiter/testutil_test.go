@@ -116,9 +116,9 @@ func (s *SimpleTestCase[T]) Compare(to T, caf assert.ComparisonAssertionFunc) *S
 	})
 }
 
-func CountUses(it iter.Seq[int]) (iter.Seq[int], *int) {
+func CountUses[T any](it iter.Seq[T]) (iter.Seq[T], *int) {
 	n := 0
-	return func(yield func(int) bool) {
+	return func(yield func(T) bool) {
 		n++
 		it(yield)
 	}, &n
