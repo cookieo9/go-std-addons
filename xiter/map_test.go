@@ -1,6 +1,7 @@
 package xiter
 
 import (
+	"iter"
 	"testing"
 )
 
@@ -23,7 +24,7 @@ func TestMap(t *testing.T) {
 		mapTestCase("intToFloat", []int{1, 2, 3}, []float64{1, 2, 3}, intToFloat),
 		mapTestCase("intToHalfFloat", []int{1, 2, 3}, []float64{0.5, 1, 1.5}, intToHalfFloat),
 
-		PanicTestCases(func(s func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(s iter.Seq[int]) iter.Seq[int] {
 			return Map(s, func(x int) int { return x })
 		}),
 	}.Run(t)

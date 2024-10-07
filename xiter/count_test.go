@@ -1,6 +1,7 @@
 package xiter
 
 import (
+	"iter"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -32,9 +33,9 @@ func TestCountOverflowUnderflow(t *testing.T) {
 	})
 }
 
-func sliceTestCase[T Countable](name string, iter func(func(T) bool), want []T) *SimpleTestCase[[]T] {
+func sliceTestCase[T Countable](name string, it iter.Seq[T], want []T) *SimpleTestCase[[]T] {
 	tc := SimpleTest(name, func(t *testing.T) []T {
-		return sliceCollect(iter)
+		return sliceCollect(it)
 	})
 	if len(want) > 0 {
 		return tc.Compare(want, assert.EqualValues).Args("match slice")
@@ -66,33 +67,33 @@ func TestRanges(t *testing.T) {
 
 func TestCountPanics(t *testing.T) {
 	t.Run("Count", func(t *testing.T) {
-		PanicTestCases(func(it func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
 			sliceCollect(it)
 			return Limit(Count(0), 10)
 		}).Run(t)
 	})
 	t.Run("CountUp", func(t *testing.T) {
-		PanicTestCases(func(it func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
 			sliceCollect(it)
 			return Limit(CountUp(0, 1), 10)
 		}).Run(t)
 	})
 	t.Run("CountDown", func(t *testing.T) {
-		PanicTestCases(func(it func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
 			sliceCollect(it)
 			return Limit(CountDown(0, 1), 10)
 		}).Run(t)
 	})
 
 	t.Run("Range", func(t *testing.T) {
-		PanicTestCases(func(it func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
 			sliceCollect(it)
 			return Range(0, 10)
 		}).Run(t)
 	})
 
 	t.Run("RangeBy", func(t *testing.T) {
-		PanicTestCases(func(it func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(it iter.Seq[int]) iter.Seq[int] {
 			sliceCollect(it)
 			return RangeBy(0, 10, 1)
 		}).Run(t)

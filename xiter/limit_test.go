@@ -1,6 +1,7 @@
 package xiter
 
 import (
+	"iter"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestLimit(t *testing.T) {
 		limitTestCase("someTwo", []int{1, 2, 3}, 2, []int{1, 2}),
 		limitTestCase("someMany", []int{1, 2, 3}, 42, []int{1, 2, 3}),
 
-		PanicTestCases(func(s func(func(bool) bool)) func(func(bool) bool) {
+		PanicTestCases(func(s iter.Seq[bool]) iter.Seq[bool] {
 			return Limit(s, 42)
 		}),
 	}.Run(t)
@@ -55,10 +56,10 @@ func TestWhileUntil(t *testing.T) {
 		whileTestCase("whileMoreThan3", nums, moreThan3, []int{}),
 		untilTestCase("untilMoreThan3", nums, moreThan3, []int{1, 2, 3}),
 
-		PanicTestCases(func(f func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(f iter.Seq[int]) iter.Seq[int] {
 			return While(f, func(i int) bool { return i > 10 })
 		}),
-		PanicTestCases(func(f func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(f iter.Seq[int]) iter.Seq[int] {
 			return Until(f, func(i int) bool { return i > 10 })
 		}),
 	}.Run(t)
@@ -95,11 +96,11 @@ func TestFirstLast(t *testing.T) {
 		makeFirstTest("someFirst", []int{1, 2, 3}, 1, true),
 		makeLastTest("someLast", []int{1, 2, 3}, 3, true),
 
-		PanicTestCases(func(f func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(f iter.Seq[int]) iter.Seq[int] {
 			First(f)
 			return f
 		}),
-		PanicTestCases(func(f func(func(int) bool)) func(func(int) bool) {
+		PanicTestCases(func(f iter.Seq[int]) iter.Seq[int] {
 			Last(f)
 			return f
 		}),
