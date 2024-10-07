@@ -1,6 +1,6 @@
 module github.com/cookieo9/go-std-addons/xiter
 
-go 1.21.13
+go 1.23.2
 
 require github.com/stretchr/testify v1.9.0
 
