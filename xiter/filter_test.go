@@ -6,11 +6,11 @@ import (
 )
 
 func filterTestCase[T any](name string, source []T, want []T, f func(T) bool) GenericTestCase {
-	return IteratorCollectTest(name, Filter(sliceValues(source), f), want)
+	return SliceCollectTest(name, Filter(sliceValues(source), f), want)
 }
 
 func excludeTestCase[T any](name string, source []T, want []T, f func(T) bool) GenericTestCase {
-	return IteratorCollectTest(name, Exclude(sliceValues(source), f), want)
+	return SliceCollectTest(name, Exclude(sliceValues(source), f), want)
 }
 
 func TestFilterExclude(t *testing.T) {

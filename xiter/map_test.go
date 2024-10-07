@@ -6,7 +6,7 @@ import (
 )
 
 func mapTestCase[In, Out any](name string, source []In, want []Out, f func(In) Out) *SimpleTestCase[[]Out] {
-	return IteratorCollectTest(name, Map(sliceValues(source), f), want)
+	return SliceCollectTest(name, Map(sliceValues(source), f), want)
 }
 
 func TestMap(t *testing.T) {

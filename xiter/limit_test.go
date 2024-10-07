@@ -8,7 +8,7 @@ import (
 )
 
 func limitTestCase[T any](name string, src []T, n int, want []T) *SimpleTestCase[[]T] {
-	return IteratorCollectTest(name, Limit(sliceValues(src), n), want)
+	return SliceCollectTest(name, Limit(sliceValues(src), n), want)
 }
 
 func TestLimit(t *testing.T) {
@@ -33,11 +33,11 @@ func TestLimit(t *testing.T) {
 }
 
 func whileTestCase[T any](name string, src []T, f func(T) bool, want []T) *SimpleTestCase[[]T] {
-	return IteratorCollectTest(name, While(sliceValues(src), f), want)
+	return SliceCollectTest(name, While(sliceValues(src), f), want)
 }
 
 func untilTestCase[T any](name string, src []T, f func(T) bool, want []T) *SimpleTestCase[[]T] {
-	return IteratorCollectTest(name, Until(sliceValues(src), f), want)
+	return SliceCollectTest(name, Until(sliceValues(src), f), want)
 }
 
 func TestWhileUntil(t *testing.T) {
