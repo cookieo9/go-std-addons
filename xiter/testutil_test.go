@@ -124,7 +124,7 @@ func CountUses(it iter.Seq[int]) (iter.Seq[int], *int) {
 	}, &n
 }
 
-func IteratorCollectTest[T any](name string, it iter.Seq[T], want []T) *SimpleTestCase[[]T] {
+func SliceCollectTest[T any](name string, it iter.Seq[T], want []T) *SimpleTestCase[[]T] {
 	tc := SimpleTest(name, func(t *testing.T) []T {
 		return sliceCollect(it)
 	})
