@@ -21,14 +21,14 @@ func Limit[T any](it iter.Seq[T], n int) iter.Seq[T] {
 // iterator function it as long as the provided condition function f returns
 // true for each element.
 func While[T any](it iter.Seq[T], f func(T) bool) iter.Seq[T] {
-	return process(it, func(t T, yield func(T) bool) bool { return f(t) && yield(t) })
+	return Process(it, func(t T, yield func(T) bool) bool { return f(t) && yield(t) })
 }
 
 // Until returns a new iterator function that yields elements from the given
 // iterator function it as long as the provided condition function f returns
 // false for each element.
 func Until[T any](it iter.Seq[T], f func(T) bool) iter.Seq[T] {
-	return process(it, func(t T, yield func(T) bool) bool { return !f(t) && yield(t) })
+	return Process(it, func(t T, yield func(T) bool) bool { return !f(t) && yield(t) })
 }
 
 // Last returns the last element yielded by the given iterator function,

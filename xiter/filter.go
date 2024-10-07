@@ -6,7 +6,7 @@ import "iter"
 // iterator it, and returns a new iterator that yields only the elements for
 // which f returns true.
 func Filter[T any](it iter.Seq[T], f func(T) bool) iter.Seq[T] {
-	return process(it, func(t T, yield func(T) bool) bool {
+	return Process(it, func(t T, yield func(T) bool) bool {
 		return !f(t) || yield(t)
 	})
 }
@@ -15,7 +15,7 @@ func Filter[T any](it iter.Seq[T], f func(T) bool) iter.Seq[T] {
 // iterator it, and returns a new iterator that yields only the elements for
 // which f returns false.
 func Exclude[T any](it iter.Seq[T], f func(T) bool) iter.Seq[T] {
-	return process(it, func(t T, yield func(T) bool) bool {
+	return Process(it, func(t T, yield func(T) bool) bool {
 		return f(t) || yield(t)
 	})
 }
