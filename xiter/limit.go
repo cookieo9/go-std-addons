@@ -6,14 +6,12 @@ import "iter"
 // iterator.
 func Limit[T any](it iter.Seq[T], n int) iter.Seq[T] {
 	return func(yield func(T) bool) {
-		i := 0
-		it(func(t T) bool {
-			if i >= n {
-				return false
+		i := n
+		for t := range it {
+			if i--; i < 0 || !yield(t) {
+				return
 			}
-			i++
-			return yield(t)
-		})
+		}
 	}
 }
 
@@ -35,10 +33,9 @@ func Until[T any](it iter.Seq[T], f func(T) bool) iter.Seq[T] {
 // and a boolean value showing if there was an element. An empty iterator will
 // result in a zero value and false.
 func Last[T any](it iter.Seq[T]) (value T, ok bool) {
-	it(func(t T) bool {
-		value, ok = t, true
-		return true
-	})
+	for value = range it {
+		ok = true
+	}
 	return value, ok
 }
 
@@ -46,9 +43,8 @@ func Last[T any](it iter.Seq[T]) (value T, ok bool) {
 // and a boolean value showing if there was an element. An empty iterator will
 // result in a zero value and false.
 func First[T any](it iter.Seq[T]) (value T, ok bool) {
-	it(func(t T) bool {
-		value, ok = t, true
-		return false
-	})
-	return value, ok
+	for value = range it {
+		return value, true
+	}
+	return value, false
 }
