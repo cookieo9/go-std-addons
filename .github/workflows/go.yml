@@ -11,21 +11,35 @@ on:
 
 jobs:
 
+  build-go1_18:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Go 1.18
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.18.x'
+    - name: Build
+      run : go build -v ./...
+    - name: Test
+      run : go test -v ./...
+
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        dir: [ '.', 'xiter' ]
         go: [ '1.21.x', 'stable', 'oldstable' ]
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Go
+    - name: Set up Go ${{ matrix.go }}
       uses: actions/setup-go@v5
       with:
         go-version: ${{ matrix.go }}
 
-    - name: Build
-      run: go build -v ./...
+    - name: Build ${{ matrix.dir }}
+      run: go build -C ${{ matrix.dir }} -v ./...
 
-    - name: Test
-      run: go test -v ./...
+    - name: Test ${{ matrix.dir }}
+      run: go test -C ${{ matrix.dir }} -v ./...
