@@ -9,8 +9,8 @@ import (
 
 // A Pair holds two values of potentially different types.
 type Pair[T, U any] struct {
-	First  T
-	Second U
+	A T
+	B U
 }
 
 // String returns a string representation of the Pair in the format
@@ -24,7 +24,7 @@ func (p Pair[T, U]) String() string {
 // ignored. If the # flag is set, the type parameters are also included in the
 // format "Pair[T,U]{<First>,<Second>}".
 func (p Pair[T, U]) Format(f fmt.State, _ rune) {
-	a, b := Unpack(p)
+	a, b := p.Unpack()
 	if f.Flag('#') {
 		t := reflect.TypeOf(p)
 		tT := t.Field(0).Type.String()
@@ -35,29 +35,29 @@ func (p Pair[T, U]) Format(f fmt.State, _ rune) {
 	fmt.Fprintf(f, "Pair{%#v,%#v}", a, b)
 }
 
-// New creates a new Pair with the given values.
-func New[T, U any](a T, b U) Pair[T, U] {
-	return Pair[T, U]{First: a, Second: b}
-}
-
 // First returns the first value stored in the Pair.
-func First[T, U any](p Pair[T, U]) T {
-	return p.First
+func (p Pair[T, U]) First() T {
+	return p.A
 }
 
 // Second returns the second value stored in the Pair.
-func Second[T, U any](p Pair[T, U]) U {
-	return p.Second
+func (p Pair[T, U]) Second() U {
+	return p.B
 }
 
 // Unpack returns the two values stored in the Pair.
-func Unpack[T, U any](p Pair[T, U]) (T, U) {
-	return p.First, p.Second
+func (p Pair[T, U]) Unpack() (T, U) {
+	return p.A, p.B
 }
 
 // Swap returns a new Pair with the First and Second values swapped.
-func Swap[T, U any](p Pair[T, U]) Pair[U, T] {
-	return Pair[U, T]{First: p.Second, Second: p.First}
+func (p Pair[T, U]) Swap() Pair[U, T] {
+	return Pair[U, T]{A: p.B, B: p.A}
+}
+
+// Of creates a new Pair with the given values.
+func Of[T, U any](a T, b U) Pair[T, U] {
+	return Pair[T, U]{A: a, B: b}
 }
 
 // Equal compares two Pair values for equality. It returns true if the two
@@ -74,7 +74,7 @@ func Equal[T, U comparable](a, b Pair[T, U]) bool {
 //
 // This only works when both fields implement the Ordered interface.
 func Less[T, U Ordered](a, b Pair[T, U]) bool {
-	return less2(a.First, b.First, a.Second, b.Second)
+	return less2(a.A, b.A, a.B, b.B)
 }
 
 // Compare provides an integer representing the relative order of two Pair
@@ -84,5 +84,5 @@ func Less[T, U Ordered](a, b Pair[T, U]) bool {
 //
 // This only works when both fields implement the Ordered interface.
 func Compare[T, U Ordered](a, b Pair[T, U]) int {
-	return compare2(a.First, b.First, a.Second, b.Second)
+	return compare2(a.A, b.A, a.B, b.B)
 }
