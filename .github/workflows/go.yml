@@ -28,7 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dir: [ '.', 'xiter' ]
         go: [ '1.21.x', 'stable', 'oldstable' ]
     steps:
     - uses: actions/checkout@v4
@@ -38,8 +37,12 @@ jobs:
       with:
         go-version: ${{ matrix.go }}
 
-    - name: Build ${{ matrix.dir }}
-      run: go build -C ${{ matrix.dir }} -v ./...
+    - name: Build
+      run: |
+        go build -v ./...
+        go build -C xiter ./...
 
-    - name: Test ${{ matrix.dir }}
-      run: go test -C ${{ matrix.dir }} -v ./...
+    - name: Test
+      run: |
+        go test -v ./..."
+        go test -C xiter -v ./..."
