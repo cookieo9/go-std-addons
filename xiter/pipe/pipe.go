@@ -28,13 +28,30 @@ func (p ProcessorFunc[T, U]) Convert(in iter.Seq[T]) iter.Seq[U] {
 	return p(in)
 }
 
-// Pipeline creates a new Processor that represents a pipeline of the given Processors.
-// The pipeline is validated to ensure that the input type of each Processor matches the
-// output type of the previous Processor. If the validation fails, an error is panicked.
-func Pipeline(ps ...Processor) Processor {
+// Join creates a new Processor that represents a pipeline of the given
+// Processors. The pipeline is validated to ensure that the input type of each
+// Processor matches the output type of the previous Processor. If the
+// validation fails, the function panics.
+//
+// In the case that only one Processor is provided, it is returned as is. If the
+// list of Processors is empty, it returns a Processor that acts as a no-op.
+func Join(ps ...Processor) Processor {
+	return xerrors.Must(TryJoin(ps...))
+}
+
+// TryJoin creates a new Processor that represents a pipeline of the given
+// Processors. The pipeline is validated to ensure that the input type of each
+// Processor matches the output type of the previous Processor. If the
+// validation fails, an error is returned.
+//
+// In the case that only one Processor is provided, it is returned as is. If the
+// list of Processors is empty, it returns a Processor that acts as a no-op.
+func TryJoin(ps ...Processor) (Processor, error) {
+	if len(ps) == 1 {
+		return ps[0], nil
+	}
 	p := pipeline(ps)
-	p.validate()
-	return p
+	return p, p.validate()
 }
 
 type pipeline []Processor
@@ -42,26 +59,26 @@ type pipeline []Processor
 // validate ensures that the pipeline is valid by checking that the input type of each
 // Processor matches the output type of the previous Processor. If the validation fails,
 // an error is panicked.
-func (p pipeline) validate() {
+func (p pipeline) validate() error {
 	if len(p) == 0 {
-		return
+		return nil
 	}
 	t := reflect.ValueOf(p[0]).MethodByName("Convert").Type().In(0)
 	if t.Kind() == reflect.Interface {
-		return
+		return nil
 	}
 	if !t.CanSeq() {
-		err := fmt.Errorf("expected iterator input, got %s", t)
-		panic(err)
+		return fmt.Errorf("expected iterator input, got %s", t)
 	}
 	for i, p := range p {
 		t2 := reflect.ValueOf(p).MethodByName("Convert").Type().In(0)
 		if t2 != t {
 			err := fmt.Errorf("step %d: expected input type %s, got %s", i, t, t2)
-			panic(err)
+			return err
 		}
 		t = reflect.ValueOf(p).MethodByName("Convert").Type().Out(0)
 	}
+	return nil
 }
 
 func (p pipeline) isProcessor() {}
@@ -79,27 +96,31 @@ func (p pipeline) Convert(in any) any {
 	return iValue.Interface()
 }
 
-// ProcessSlice applies the given Processor to the input slice, collecting the
-// results into a new slice. If an error occurs during processing, or iteration
-// it is returned.
-func ProcessSlice[Out, In any](in []In, p Processor) ([]Out, error) {
-	it, err := Process[Out](slices.Values(in), p)
-	if err != nil {
-		return nil, err
-	}
+// ProcessSlice applies the given Processors to the input slice, collecting the
+// results into a new slice. Processors are combined using the Join function,
+// which may panic if the Processors are not compatible. This function will also
+// panic if the slice element type doesn't match the input type of the first
+// Processor.
+//
+// If an error is panic'd during execution of the iterator to produce the slice,
+// that error is returned.
+func ProcessSlice[Out, In any](in []In, ps ...Processor) ([]Out, error) {
+	it := Process[Out](slices.Values(in), ps...)
 	return xerrors.CatchValue(func() []Out {
 		return slices.Collect(it)
 	})
 }
 
-// Process applies the given Processor to the input iterator, returning a new iterator
-// with the processed values. If an error occurs during processing, it is returned.
-func Process[Out, In any](in iter.Seq[In], p Processor) (iter.Seq[Out], error) {
-	return xerrors.CatchValue(func() iter.Seq[Out] {
-		pv := reflect.ValueOf(p)
-		result := pv.MethodByName("Convert").Call([]reflect.Value{reflect.ValueOf(in)})[0].Interface()
-		return result.(iter.Seq[Out])
-	})
+// Process applies the given Processors to the input iterator, returning a new
+// iterator with the processed values. The Processors are combined using the
+// Join function, which may panic if the Processors are not compatible. This
+// function will also panic if the input iterator doesn't match the input type
+// of the first Processor.
+func Process[Out, In any](in iter.Seq[In], ps ...Processor) iter.Seq[Out] {
+	p := Join(ps...)
+	pv := reflect.ValueOf(p)
+	result := pv.MethodByName("Convert").Call([]reflect.Value{reflect.ValueOf(in)})[0].Interface()
+	return result.(iter.Seq[Out])
 }
 
 // Map applies the given function f to each element in the input iterator,

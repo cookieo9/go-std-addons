@@ -33,3 +33,12 @@ func CatchValue[T any](f func() T) (value T, err error) {
 	err = Catch(func() { value = f() })
 	return value, err
 }
+
+// Must is a utility function that takes a value and an error, and returns the value.
+// If the error is not nil, Must will panic with the error.
+func Must[T any](v T, err error) T {
+	if err != nil {
+		panic(err)
+	}
+	return v
+}
