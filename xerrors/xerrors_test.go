@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCatch(t *testing.T) {
@@ -63,5 +64,23 @@ func TestCatchValue(t *testing.T) {
 		value, err := CatchValue(f)
 		assert.NoError(t, err, "error should be nil")
 		assert.Equal(t, testValue, value, "value should be returned")
+	})
+}
+
+func TestMust(t *testing.T) {
+	testErr := errors.New("test")
+	testValue := 42
+
+	t.Run("noPanic", func(t *testing.T) {
+		require.NotPanics(t, func() {
+			got := Must(testValue, nil)
+			assert.Equal(t, testValue, got, "value should be returned")
+			Must(testValue, nil)
+		}, "panic should not be thrown")
+	})
+	t.Run("panicWithError", func(t *testing.T) {
+		require.PanicsWithValue(t, testErr, func() {
+			Must(testValue, testErr)
+		}, "panic should be thrown")
 	})
 }
