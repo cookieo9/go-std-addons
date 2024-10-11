@@ -58,7 +58,7 @@ type pipeline []Processor
 
 // validate ensures that the pipeline is valid by checking that the input type of each
 // Processor matches the output type of the previous Processor. If the validation fails,
-// an error is panicked.
+// an error is returned.
 func (p pipeline) validate() error {
 	if len(p) == 0 {
 		return nil
