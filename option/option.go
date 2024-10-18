@@ -55,9 +55,9 @@ func (o Value[T]) GetOr(v T) T {
 	return v
 }
 
-// Value returns the value contained in the Value[T]. If the Value[T] is not
+// GetValue returns the value contained in the Value[T]. If the value is not
 // present, the zero value of the type T is returned.
-func (o Value[T]) Value() T {
+func (o Value[T]) GetValue() T {
 	return o.value
 }
 
