@@ -13,7 +13,7 @@ func limitTestCase[T any](name string, src []T, n int, want []T) *SimpleTestCase
 }
 
 func TestLimit(t *testing.T) {
-	GenericTestCases{
+	TestSuite{
 		limitTestCase("emptyNone", []int{}, 0, []int{}),
 		limitTestCase("emptyOne", []int{}, 1, []int{}),
 		limitTestCase("emptyMany", []int{}, 42, []int{}),
@@ -45,7 +45,7 @@ func TestWhileUntil(t *testing.T) {
 	lessThan5 := func(i int) bool { return i < 5 }
 	moreThan3 := func(i int) bool { return i > 3 }
 	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	GenericTestCases{
+	TestSuite{
 		whileTestCase("emptyWhile", []int{}, lessThan5, []int{}),
 		whileTestCase("nilWhile", nil, lessThan5, []int{}),
 		untilTestCase("emptyUntil", []int{}, lessThan5, []int{}),
@@ -88,7 +88,7 @@ func makeLastTest[T any](name string, src []T, want T, ok bool) *SimpleTestCase[
 }
 
 func TestFirstLast(t *testing.T) {
-	GenericTestCases{
+	TestSuite{
 		makeFirstTest("emptyFirst", []int{}, 0, false),
 		makeFirstTest("nilFirst", nil, 0, false),
 		makeLastTest("emptyLast", []int{}, 0, false),

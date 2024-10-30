@@ -16,7 +16,7 @@ func TestMap(t *testing.T) {
 	intToFloat := func(i int) float64 { return float64(i) }
 	intToHalfFloat := func(i int) float64 { return float64(i) / 2 }
 
-	GenericTestCases{
+	TestSuite{
 		mapTestCase("doubleInt", []int{1, 2, 3}, []int{2, 4, 6}, doubleInt),
 		mapTestCase("doubleIntEmpty", []int{}, []int{}, doubleInt),
 		mapTestCase("doubleIntNil", nil, nil, doubleInt),

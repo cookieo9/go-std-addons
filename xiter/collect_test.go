@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func collectTestCase[T, Accum any](name string, source []T, start Accum, f func(Accum, T) Accum, want Accum) GenericTestCase {
+func collectTestCase[T, Accum any](name string, source []T, start Accum, f func(Accum, T) Accum, want Accum) TestCase {
 	testCase := SimpleTest(name, func(t *testing.T) Accum {
 		return Collect(slices.Values(source), start, f)
 	})
@@ -22,7 +22,7 @@ func collectTestCase[T, Accum any](name string, source []T, start Accum, f func(
 func TestCollect(t *testing.T) {
 	sumAccum := func(accum int, t int) int { return accum + t }
 	collectAccum := func(accum []int, t int) []int { return append(accum, t) }
-	GenericTestCases{
+	TestSuite{
 		collectTestCase("emptySum", []int{}, 0, sumAccum, 0),
 		collectTestCase("emptySumNil", nil, 0, sumAccum, 0),
 		collectTestCase("emptySumStart10", []int{}, 10, sumAccum, 10),

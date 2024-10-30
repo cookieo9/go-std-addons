@@ -35,7 +35,7 @@ func TestCountOverflowUnderflow(t *testing.T) {
 }
 
 func TestRanges(t *testing.T) {
-	GenericTestCases{
+	TestSuite{
 		SliceCollectTest("Range(0,10)", Range(0, 10), []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}),
 		SliceCollectTest("Range(1,10)", Range(1, 10), []int{1, 2, 3, 4, 5, 6, 7, 8, 9}),
 		SliceCollectTest("Range(10,0)", Range(10, 0), []int{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}),
