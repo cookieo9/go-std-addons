@@ -6,11 +6,11 @@ import (
 	"testing"
 )
 
-func filterTestCase[T any](name string, source []T, want []T, f func(T) bool) GenericTestCase {
+func filterTestCase[T any](name string, source []T, want []T, f func(T) bool) TestCase {
 	return SliceCollectTest(name, Filter(slices.Values(source), f), want)
 }
 
-func excludeTestCase[T any](name string, source []T, want []T, f func(T) bool) GenericTestCase {
+func excludeTestCase[T any](name string, source []T, want []T, f func(T) bool) TestCase {
 	return SliceCollectTest(name, Exclude(slices.Values(source), f), want)
 }
 
@@ -20,7 +20,7 @@ func TestFilterExclude(t *testing.T) {
 	all := func(i int) bool { return true }
 
 	t.Run("Filter", func(t *testing.T) {
-		GenericTestCases{
+		TestSuite{
 			filterTestCase("all", nums, nums, all),
 			filterTestCase("allEmpty", []int{}, []int{}, all),
 			filterTestCase("allNil", nil, nil, all),
@@ -36,7 +36,7 @@ func TestFilterExclude(t *testing.T) {
 	})
 
 	t.Run("Exclude", func(t *testing.T) {
-		GenericTestCases{
+		TestSuite{
 			excludeTestCase("all", nums, []int{}, all),
 			excludeTestCase("allEmpty", []int{}, []int{}, all),
 			excludeTestCase("allNil", nil, nil, all),

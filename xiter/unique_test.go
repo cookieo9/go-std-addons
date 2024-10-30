@@ -7,7 +7,7 @@ import (
 
 func TestUnique(t *testing.T) {
 	piDigits := []int{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
-	GenericTestCases{
+	TestSuite{
 		SliceCollectTest("empty", Unique(slices.Values([]int{})), nil),
 		SliceCollectTest("pidigits", Unique(slices.Values(piDigits)), []int{3, 1, 4, 5, 9, 2, 6}),
 		SliceCollectTest("pidigits-lim4", Limit(Unique(slices.Values(piDigits)), 4), []int{3, 1, 4, 5}),
