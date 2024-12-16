@@ -20,13 +20,13 @@ func TestMap(t *testing.T) {
 	intToHalfFloat := func(i int) float64 { return float64(i) / 2 }
 
 	TestSuite{
-		mapTestCase("doubleInt", []int{1, 2, 3}, []int{2, 4, 6}, doubleInt),
+		mapTestCase("doubleInt", list(1, 2, 3), list(2, 4, 6), doubleInt),
 		mapTestCase("doubleIntEmpty", []int{}, []int{}, doubleInt),
 		mapTestCase("doubleIntNil", nil, nil, doubleInt),
 
-		mapTestCase("halfFloat", []float64{1, 2, 3}, []float64{0.5, 1, 1.5}, halfFloat),
-		mapTestCase("intToFloat", []int{1, 2, 3}, []float64{1, 2, 3}, intToFloat),
-		mapTestCase("intToHalfFloat", []int{1, 2, 3}, []float64{0.5, 1, 1.5}, intToHalfFloat),
+		mapTestCase("halfFloat", list(1.0, 2, 3), list(0.5, 1, 1.5), halfFloat),
+		mapTestCase("intToFloat", list(1, 2, 3), list(1.0, 2, 3), intToFloat),
+		mapTestCase("intToHalfFloat", list(1, 2, 3), list(0.5, 1, 1.5), intToHalfFloat),
 
 		PanicTestCases(func(s iter.Seq[int]) iter.Seq[int] {
 			return Map(s, func(x int) int { return x })
