@@ -24,9 +24,9 @@ func TestMap(t *testing.T) {
 		mapTestCase("doubleIntEmpty", []int{}, []int{}, doubleInt),
 		mapTestCase("doubleIntNil", nil, nil, doubleInt),
 
-		mapTestCase("halfFloat", list(1.0, 2, 3), list(0.5, 1, 1.5), halfFloat),
-		mapTestCase("intToFloat", list(1, 2, 3), list(1.0, 2, 3), intToFloat),
-		mapTestCase("intToHalfFloat", list(1, 2, 3), list(0.5, 1, 1.5), intToHalfFloat),
+		mapTestCase("halfFloat", list(1.0, 2.0, 3.0), list(0.5, 1.0, 1.5), halfFloat),
+		mapTestCase("intToFloat", list(1, 2, 3), list(1.0, 2.0, 3.0), intToFloat),
+		mapTestCase("intToHalfFloat", list(1, 2, 3), list(0.5, 1.0, 1.5), intToHalfFloat),
 
 		PanicTestCases(func(s iter.Seq[int]) iter.Seq[int] {
 			return Map(s, func(x int) int { return x })
@@ -82,7 +82,7 @@ func TestMapOut(t *testing.T) {
 
 	TestSuite{
 		mapOutTestCase("isOdd", list(1, 2, 3), pairUp(list(1, 2, 3), list(true, false, true)), isOdd),
-		mapOutTestCase("sinCos", list(0.0, math.Pi/2, math.Pi), pairUp(list(0.0, 1, 0), list(1.0, 0, -1)), sinCos),
+		mapOutTestCase("sinCos", list(0.0, math.Pi/2, math.Pi), pairUp(list(0.0, 1.0, 0.0), list(1.0, 0.0, -1.0)), sinCos),
 
 		mapOutTestCase("isOddNil", nil, nil, isOdd),
 		mapOutTestCase("isOddEmpty", []int{}, []pair.Pair[int, bool]{}, isOdd),
