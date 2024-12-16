@@ -186,7 +186,7 @@ func SliceCollectTest[T any](name string, it iter.Seq[T], want []T) *SimpleTestC
 //     iterator that panics.
 //
 // Most iterator processing functions can be tested for these situations.
-func PanicTestCases[T any](f func(iter.Seq[T]) iter.Seq[T]) TestSuite {
+func PanicTestCases[T, U any](f func(iter.Seq[T]) iter.Seq[U]) TestSuite {
 	return TestSuite{
 		SimpleTest("nilIterPanic", func(t *testing.T) bool {
 			var it iter.Seq[T]
