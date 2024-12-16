@@ -202,3 +202,8 @@ func PanicTestCases[T, U any](f func(iter.Seq[T]) iter.Seq[U]) TestSuite {
 		}).PanicsWith("no values").Args("panics as expected"),
 	}
 }
+
+// list returns a new slice containing the provided elements.
+func list[T any](xs ...T) []T {
+	return xs
+}
